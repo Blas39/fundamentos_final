@@ -40,7 +40,7 @@ def validar_vector(vector):
     if vector.size == 0:
         raise ValueError("error: el vector esta vacio")
     if np.isnan(vector).any():
-        raise ValueError("error: hay valores nan en la vector")
+        raise ValueError("error: hay valores nan en el vector")
     if vector.ndim != 1: #verificacion si es UNIDIMENSIONAL
         raise TypeError("error: no es un vector")
 
