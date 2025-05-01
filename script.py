@@ -48,8 +48,11 @@ def validar_vector(vector):
 # Propiedades Aritmeticas
 
 def propiedad_conmutativa(A, B, operacion = "suma"):
-    validar_vector(A)
-    validar_vector(B)
+    validar_matriz(A)
+    validar_matriz(B)
+
+    if A.shape != B.shape:
+        raise ValueError("Las matrices no tienen la misma forma")
 
     operacion = operacion.lower()
 
@@ -63,9 +66,12 @@ def propiedad_conmutativa(A, B, operacion = "suma"):
     return np.array_equal(izq, der)
 
 def propiedad_asociativa(A, B, C, operacion = "suma"):
-    validar_vector(A)
-    validar_vector(B)
-    validar_vector(C)
+    validar_matriz(A)
+    validar_matriz(B)
+    validar_matriz(C)
+    
+    if A.shape != B.shape or B.shape != C.shape:
+        raise ValueError("Las matrices no tienen la misma forma")
 
     operacion = operacion.lower()
 
@@ -79,9 +85,12 @@ def propiedad_asociativa(A, B, C, operacion = "suma"):
     return np.array_equal(izq, der)
 
 def propiedad_distributiva(A, B, C):
-    validar_vector(A)
-    validar_vector(B)
-    validar_vector(C)
+    validar_matriz(A)
+    validar_matriz(B)
+    validar_matriz(C)
+
+    if A.shape != B.shape or B.shape != C.shape:
+        raise ValueError("Las matrices no tienen la misma forma")
 
     izq = A * (B + C)
     der = A * B + A * C
@@ -89,7 +98,7 @@ def propiedad_distributiva(A, B, C):
     return np.array_equal(izq, der)
 
 def propiedad_identidad(A, operacion = "suma"):
-    validar_vector(A)
+    validar_matriz(A)
 
     if operacion == "multiplicacion":
        identidad = np.ones_like(A)
@@ -101,7 +110,7 @@ def propiedad_identidad(A, operacion = "suma"):
     return np.array_equal(resultado, A)
 
 def propiedad_inversa(A, operacion = "suma"):
-    validar_vector(A)
+    validar_matriz(A)
 
     if operacion == "multiplicacion":
         if np.any(A == 0): return False
@@ -112,24 +121,71 @@ def propiedad_inversa(A, operacion = "suma"):
         inverso = -A
         resultado = A + inverso
         return np.array_equal(resultado, np.zeros_like(A))
+    
 
-# ---------------------------
-# USO Y PRUEBA
-# ---------------------------
-A = generar_matriz(3, 1)
-B = generar_matriz(3, 1)
-C = generar_matriz(3, 1)
+# interaccion
 
-print("Matriz A:\n", A)
-print("Matriz B:\n", B)
-print("Matriz C:\n", C)
+def mostrar_menu():
+    print("\nElige una propiedad para probar:")
+    print("1. Conmutativa suma")
+    print("2. Conmutativa multiplicacion")
+    print("3. Asociativa suma")
+    print("4. Asociativa multiplicacion")
+    print("5. Distributiva")
+    print("6. Identidad aditiva")
+    print("7. Identidad multiplicativa")
+    print("8. Inverso aditivo")
+    print("9. Inverso multiplicativo")
+    print("0. Salir")
 
-print("Conmutativa suma:", propiedad_conmutativa(A, B))
-print("Conmutativa multiplicacion:", propiedad_conmutativa(A, B, "multiplicacion"))
-print("Asociativa suma:", propiedad_asociativa(A, B, C))
-print("Asociativa multiplicacion:", propiedad_asociativa(A, B, C, "multiplicacion"))
-print("Distributiva:", propiedad_distributiva(A, B, C))
-print("Identidad aditiva:", propiedad_identidad(A))
-print("Identidad multiplicativa:", propiedad_identidad(A, "multiplicacion"))
-print("Inverso aditivo:", propiedad_inversa(A))
-print("Inverso multiplicativo:", propiedad_inversa(A, "multiplicacion"))
+def ejecutar_opcion(opcion, A, B, C):
+    if opcion == "1":
+        print("Conmutativa suma:", propiedad_conmutativa(A, B))
+    elif opcion == "2":
+        print("Conmutativa multiplicacion:", propiedad_conmutativa(A, B, "multiplicacion"))
+    elif opcion == "3":
+        print("Asociativa suma:", propiedad_asociativa(A, B, C))
+    elif opcion == "4":
+        print("Asociativa multiplicacion:", propiedad_asociativa(A, B, C, "multiplicacion"))
+    elif opcion == "5":
+        print("Distributiva:", propiedad_distributiva(A, B, C))
+    elif opcion == "6":
+        print("Identidad aditiva:", propiedad_identidad(A))
+    elif opcion == "7":
+        print("Identidad multiplicativa:", propiedad_identidad(A, "multiplicacion"))
+    elif opcion == "8":
+        print("Inverso aditivo:", propiedad_inversa(A))
+    elif opcion == "9":
+        print("Inverso multiplicativo:", propiedad_inversa(A, "multiplicacion"))
+    elif opcion == "0":
+        print("Saliendo")
+    else:
+        print("Opcion Invalida")
+
+def creacion_matriz(nombre="matriz"):
+    try:
+        filas = int(input(f"Ingrese numero de filas para {nombre}: "))
+        columnas = int(input(f"Ingrese numero de columnas para {nombre}: "))
+        rand = input("TIPO DE CREACION (random/zero): ").strip().lower()
+        aleatorio = rand == 'random'
+        vec = generar_matriz(filas, columnas, aleatorio)
+        print(f"{nombre} generado:\n{vec}")
+        return vec
+    except Exception as e:
+        print("error:", e)
+        return creacion_matriz(nombre)
+
+# ejecucion
+A = creacion_matriz("A")
+B = creacion_matriz("B")
+C = creacion_matriz("C")
+
+while True:
+    mostrar_menu()
+    opcion = input("Selecciona una opción: ")
+    if opcion == "0":
+        break
+    try:
+        ejecutar_opcion(opcion, A, B, C)
+    except Exception as e:
+        print("SE ENCONTRO UN ERROR:", e)
