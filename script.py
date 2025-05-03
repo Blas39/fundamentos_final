@@ -3,9 +3,6 @@ import numpy as np
 # Generacion
 
 def generar_matriz(filas, columnas, random = True):
-    if filas <= 0 or columnas <= 0:
-        raise ValueError("Filas o Columnas NO VALIDOS")
-    
     esVector = False
     
     if filas == 1 or columnas == 1: #CONVERSION DIRECTA A VECTOR
@@ -15,12 +12,12 @@ def generar_matriz(filas, columnas, random = True):
     if esVector: #CONVERSION DIRECTA A VECTOR
         tamaño = filas * columnas
         if random:
-            matriz = np.random.randint(0, 10, size = tamaño)
+            matriz = np.random.randint(1, 10, size = tamaño)
         else:
             matriz = np.zeros(tamaño)
     else:
         if random:
-            matriz = np.random.randint(0, 10, size = (filas, columnas))
+            matriz = np.random.randint(1, 10, size = (filas, columnas))
         else:
             matriz = np.zeros((filas, columnas))
 
@@ -30,7 +27,7 @@ def generar_matriz(filas, columnas, random = True):
 
 def validar_matriz(matriz):
     if matriz is None:
-        raise ValueError("error: la matriz es de tipo None")
+        raise ValueError("error: es tipo NONE")
     if not isinstance(matriz, np.ndarray):
         raise TypeError("error: no es un arreglo de numpy")
     if matriz.size == 0:
@@ -47,14 +44,16 @@ def propiedad_conmutativa(A, B, operacion = "suma"): # El orden de los elementos
     if A.shape != B.shape:
         raise ValueError("Las matrices no tienen la misma forma")
 
-    operacion = operacion.lower()
-
     if operacion == "multiplicacion":
         izq = A * B
         der = B * A
+        print("Izquierda (A * B):\n", izq)
+        print("Derecha (B * A):\n", der)
     else:
         izq = A + B
         der = B + A
+        print("Izquierda (A + B):\n", izq)
+        print("Derecha (B + A):\n", der)
 
     return np.array_equal(izq, der)
 
@@ -65,18 +64,20 @@ def propiedad_asociativa(A, B, C, operacion = "suma"): # El agrupamiento de los 
     if A.shape != B.shape or B.shape != C.shape:
         raise ValueError("Las matrices no tienen la misma forma")
 
-    operacion = operacion.lower()
-
     if operacion == "multiplicacion":
         izq = (A * B) * C
         der = A * (B * C)
+        print("Izquierda (A * B) * C:\n", izq)
+        print("Derecha A * (B * C):\n", der)
     else:
         izq = (A + B) + C
         der = A + (B + C)
+        print("Izquierda (A + B) + C:\n", izq)
+        print("Derecha A + (B + C):\n", der)
 
     return np.array_equal(izq, der)
 
-def propiedad_distributiva(A, B, C): # Distribuir la multiplicación sobre cada término de la suma, y el resultado será el mismo
+def propiedad_distributiva(A, B, C): # Distribuye la multiplicación sobre cada término de la suma, y el resultado será el mismo
     validar_matriz(A)
     validar_matriz(B)
     validar_matriz(C)
@@ -87,17 +88,24 @@ def propiedad_distributiva(A, B, C): # Distribuir la multiplicación sobre cada 
     izq = A * (B + C)
     der = A * B + A * C
 
+    print("Izquierda A * (B + C):\n", izq)
+    print("Derecha A * B + A * C:\n", der)
+
     return np.array_equal(izq, der)
 
 def propiedad_identidad(A, operacion = "suma"): # Existe un elemento para ciertas operaciones que no afecta el resultado
     validar_matriz(A)
 
     if operacion == "multiplicacion":
-       identidad = np.ones_like(A)
-       resultado = A * identidad
+        identidad = np.ones_like(A)
+        resultado = A * identidad
+        print("Identidad:\n", identidad)
+        print("Resultado:\n", resultado)
     else:
         identidad = np.zeros_like(A)
         resultado = A + identidad
+        print("Identidad:\n", identidad)
+        print("Resultado:\n", resultado)
 
     return np.array_equal(resultado, A)
 
@@ -108,10 +116,14 @@ def propiedad_inversa(A, operacion = "suma"): # Existe un elemento inverso que a
         if np.any(A == 0): return False
         inverso = 1 / A
         resultado = A * inverso
+        print("Inverso:\n", inverso)
+        print("Resultado:\n", resultado)
         return np.array_equal(resultado, np.ones_like(A))
     else:
         inverso = -A
         resultado = A + inverso
+        print("Inverso:\n", inverso)
+        print("Resultado:\n", resultado)
         return np.array_equal(resultado, np.zeros_like(A))
     
 
@@ -119,15 +131,15 @@ def propiedad_inversa(A, operacion = "suma"): # Existe un elemento inverso que a
 
 def mostrar_menu():
     print("\nElige una propiedad para probar:")
-    print("1. Conmutativa suma")
-    print("2. Conmutativa multiplicacion")
-    print("3. Asociativa suma")
-    print("4. Asociativa multiplicacion")
-    print("5. Distributiva")
-    print("6. Identidad aditiva")
-    print("7. Identidad multiplicativa")
-    print("8. Inverso aditivo")
-    print("9. Inverso multiplicativo")
+    print("1. Conmutativa suma (A, B)")
+    print("2. Conmutativa multiplicacion (A, B)")
+    print("3. Asociativa suma (A, B, C)")
+    print("4. Asociativa multiplicacion (A, B, C)")
+    print("5. Distributiva (A, B, C)")
+    print("6. Identidad aditiva (A)")
+    print("7. Identidad multiplicativa (A)")
+    print("8. Inverso aditivo (A)")
+    print("9. Inverso multiplicativo (A)")
     print("0. Salir")
 
 def ejecutar_opcion(opcion, A, B, C):
@@ -154,10 +166,20 @@ def ejecutar_opcion(opcion, A, B, C):
     else:
         print("Opcion Invalida")
 
-def creacion_matriz(nombre="matriz"):
+def creacion_matriz(nombre = "matriz"):
     try:
-        filas = int(input(f"Ingrese numero de filas para {nombre}: "))
-        columnas = int(input(f"Ingrese numero de columnas para {nombre}: "))
+        filas = input(f"Ingrese numero de filas para {nombre}: ").strip()
+        while not filas.isdigit() or int(filas) <= 0:
+            print("Por favor, ingrese un número válido para las filas")
+            filas = input(f"Ingrese numero de filas para {nombre}: ").strip()
+        filas = int(filas)
+        
+        columnas = input(f"Ingrese numero de columnas para {nombre}: ").strip()
+        while not columnas.isdigit() or int(columnas) <= 0:
+            print("Por favor, ingrese un número válido para las columnas")
+            columnas = input(f"Ingrese numero de columnas para {nombre}: ").strip()
+        columnas = int(columnas)
+
         rand = input("TIPO DE CREACION (random/cero): ").strip().lower()
         aleatorio = rand == 'random'
         vec = generar_matriz(filas, columnas, aleatorio)
