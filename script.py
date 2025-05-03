@@ -40,7 +40,7 @@ def validar_matriz(matriz):
 
 # Propiedades Aritmeticas
 
-def propiedad_conmutativa(A, B, operacion = "suma"):
+def propiedad_conmutativa(A, B, operacion = "suma"): # El orden de los elementos no afecta el resultado de la operacion
     validar_matriz(A)
     validar_matriz(B)
 
@@ -58,8 +58,7 @@ def propiedad_conmutativa(A, B, operacion = "suma"):
 
     return np.array_equal(izq, der)
 
-def propiedad_asociativa(A, B, C, operacion = "suma"):
-    validar_matriz(A)
+def propiedad_asociativa(A, B, C, operacion = "suma"): # El agrupamiento de los operandos no cambia el resultado de la operacion
     validar_matriz(B)
     validar_matriz(C)
     
@@ -77,7 +76,7 @@ def propiedad_asociativa(A, B, C, operacion = "suma"):
 
     return np.array_equal(izq, der)
 
-def propiedad_distributiva(A, B, C):
+def propiedad_distributiva(A, B, C): # Distribuir la multiplicación sobre cada término de la suma, y el resultado será el mismo
     validar_matriz(A)
     validar_matriz(B)
     validar_matriz(C)
@@ -90,7 +89,7 @@ def propiedad_distributiva(A, B, C):
 
     return np.array_equal(izq, der)
 
-def propiedad_identidad(A, operacion = "suma"):
+def propiedad_identidad(A, operacion = "suma"): # Existe un elemento para ciertas operaciones que no afecta el resultado
     validar_matriz(A)
 
     if operacion == "multiplicacion":
@@ -102,7 +101,7 @@ def propiedad_identidad(A, operacion = "suma"):
 
     return np.array_equal(resultado, A)
 
-def propiedad_inversa(A, operacion = "suma"):
+def propiedad_inversa(A, operacion = "suma"): # Existe un elemento inverso que al combinarse con el original, da resultado el elemento neutro (0 o 1)
     validar_matriz(A)
 
     if operacion == "multiplicacion":
@@ -159,7 +158,7 @@ def creacion_matriz(nombre="matriz"):
     try:
         filas = int(input(f"Ingrese numero de filas para {nombre}: "))
         columnas = int(input(f"Ingrese numero de columnas para {nombre}: "))
-        rand = input("TIPO DE CREACION (random/zero): ").strip().lower()
+        rand = input("TIPO DE CREACION (random/cero): ").strip().lower()
         aleatorio = rand == 'random'
         vec = generar_matriz(filas, columnas, aleatorio)
         if vec.ndim == 1: print("Es Unidimensional") #Alerta si es unidimensional
