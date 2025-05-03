@@ -58,6 +58,7 @@ def propiedad_conmutativa(A, B, operacion = "suma"): # El orden de los elementos
     return np.array_equal(izq, der)
 
 def propiedad_asociativa(A, B, C, operacion = "suma"): # El agrupamiento de los operandos no cambia el resultado de la operacion
+    validar_matriz(A)
     validar_matriz(B)
     validar_matriz(C)
     
