@@ -2,11 +2,17 @@ import numpy as np
 
 # Generacion
 
-def generar_matriz(filas, columnas, random=True):
+def generar_matriz(filas, columnas, random = True):
     if filas <= 0 or columnas <= 0:
         raise ValueError("Filas o Columnas NO VALIDOS")
     
+    esVector = False
+    
     if filas == 1 or columnas == 1: #CONVERSION DIRECTA A VECTOR
+        pregunta_vector = input(f"La matriz es de forma ({filas}, {columnas}), ¿quieres volverlo un vector? (si/no): ").strip().lower()
+        esVector = pregunta_vector == "si"
+    
+    if esVector: #CONVERSION DIRECTA A VECTOR
         tamaño = filas * columnas
         if random:
             matriz = np.random.randint(0, 10, size = tamaño)
@@ -31,19 +37,6 @@ def validar_matriz(matriz):
         raise ValueError("error: el arreglo esta vacio")
     if np.isnan(matriz).any():
         raise ValueError("error: hay valores nan en la matriz")
-
-def validar_vector(vector):
-    if vector is None:
-        raise ValueError("error: el vector es de tipo None")
-    if not isinstance(vector, np.ndarray):
-        raise TypeError("error: no es un arreglo de numpy")
-    if vector.size == 0:
-        raise ValueError("error: el vector esta vacio")
-    if np.isnan(vector).any():
-        raise ValueError("error: hay valores nan en el vector")
-    if vector.ndim != 1: #verificacion si es UNIDIMENSIONAL
-        raise TypeError("error: no es un vector")
-
 
 # Propiedades Aritmeticas
 
@@ -169,6 +162,7 @@ def creacion_matriz(nombre="matriz"):
         rand = input("TIPO DE CREACION (random/zero): ").strip().lower()
         aleatorio = rand == 'random'
         vec = generar_matriz(filas, columnas, aleatorio)
+        if vec.ndim == 1: print("Es Unidimensional") #Alerta si es unidimensional
         print(f"{nombre} generado:\n{vec}")
         return vec
     except Exception as e:
